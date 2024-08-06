@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        section {
+            height: 100vh;
+            width: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        section>table {
+            height: 300px;
+            width: 300px;
+            border: 2px solid white;
+            box-shadow: 0px 0px 10px white;
+            border-radius: 20px;
+            color: WHITE;
+            padding-left: 30px;
+        }
+        section>table button{
+            padding: 10px;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to User Profile</h1>
+
+    <section>
+
+    </section>
+
+    <script>
+        let url = window.location.search
+        let obj = new URLSearchParams(url)
+        let id = obj.get("id")
+        let section = document.querySelector("section")
+        function getProfile() {
+            fetch(`http://localhost:5000/users/${id}`)
+                .then((res) => { return res.json() })
+                .then((data) => {
+                    console.log(data);
+                    // let h1=document.createElement("h1")
+                    // let h2=document.createElement("h1")
+                    // let h3=document.createElement("h1")
+
+
+                    // h1.innerText=data.name
+                    // h2.innerText=data.email
+                    // h3.innerText=data.phoneNo
+
+                    // document.body.append(h1,h2,h3)
+
+                    section.innerHTML = `
+                <table>
+            <tr>
+                <td>NAME</td>
+                <td>${data.name}</td>
+            </tr>
+            <tr>
+                <td>EMAIL</td>
+                <td>${data.email}</td>
+            </tr>
+            <tr>
+                <td>PHONE NO</td>
+                <td>${data.phoneNo}</td>
+            </tr>
+            <tr>
+                <td><BUtton onclick="goToEdit('${data._id}')">EDIT</BUtton></td>
+                <td><BUtton onclick="goToDelete('${data._id}')">DELETE</BUtton></td>
+            </tr>
+           
+        </table>`
+                })
+                .catch(() => { console.log("error"); })
+        } getProfile()
+        function goToEdit(id) {
+            window.location.assign(`./editUser.html?id=${id}`)
+        }
+        function goToDelete() {
+            fetch(`http://localhost:5000/users/${id}`,{
+                method:"DELETE",
+                headers:{"content-type":"application/json"}
+            }).then(()=>{console.log("deleted");
+                window.location.assign("./user.html")
+            })
+
+
+        }
+    </script>
+</body>
+
+</html>

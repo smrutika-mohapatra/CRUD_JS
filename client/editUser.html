@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to Edit page</h1>
+    <section>
+        <article>
+            <table>
+                <tr><th colspan="2">EDIT USER FORM</th></tr>
+                <tr>
+                    <td><label for="">Name  </label></td>
+                    <td>:<input type="text"></td>
+                </tr>
+                <tr>
+                    <td><label for="">Email  </label></td>
+                    <td>:<input type="email"></td>
+                </tr>
+                <tr>
+                    <td><label for="">Ph-no  </label></td>
+                    <td>:<input type="number"></td>
+                </tr>
+               
+                <tr>
+                    <td><label for="">Confirm Password  </label></td>
+                    <td>:<input type="password"></td>
+                </tr>
+                
+                <tr>
+                    <th colspan="2"><button onclick="formHandel()">Update</button></th>
+                </tr>
+            </table>
+        </article>
+    </section>
+
+    <script >
+        let url=window.location.search
+        let obj=new URLSearchParams(url)
+        let id=obj.get("id")
+        let inputs=document.querySelectorAll("input")
+        function getData() {
+            // console.log(id);
+
+            fetch(`http://localhost:5000/users/${id}`)
+            .then((res)=>{return res.json()})
+            .then((data)=>{console.log(data);
+                inputs[0].value=data.name
+                inputs[1].value=data.email
+                inputs[2].value=data.phoneNo
+                inputs[3].value=data.password
+
+                
+            })
+            
+        }
+        getData()
+
+        function formHandel() {
+            let payload={
+                name:inputs[0].value,
+                email:inputs[1].value,
+                phoneNo:inputs[2].value,
+                password:inputs[3].value
+            }
+            fetch(`http://localhost:5000/users/${id}`,{
+                method:"PUT",
+                headers:{"content-Type":"application/json"},
+                body:JSON.stringify(payload)
+            })
+            .then(()=>{console.log("Data updated");
+                window.location.assign(`./user.html?id='${id}'`)
+            })
+            .catch(()=>{console.log("Data is not updated");})
+
+            
+            
+        }
+    </script>
+</body>
+</html>
